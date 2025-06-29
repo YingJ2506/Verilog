@@ -33,12 +33,19 @@ Verilog project - FIFO
 # 模擬結果
 EPWave 波型圖可視化測試結果（見附圖）
 ![image](https://github.com/user-attachments/assets/ec74eb81-fcb1-403a-b54e-cacf4c5da32f)
-
+T=5~15，Reset Test ok
+T=20~40，Write Test ok
+T=45~65，Read Test ok
+T=70~130，Underflow Test ok
+T=135~215，Write & Read Test ok
+T=215~545，Overflow Test ok
+T=550~590，Reset During Active Test ok
+T=600~680，Idle test ok
 
 # 錯誤修正
 - rtl ct位寬錯誤導致reset後full一直處於1高電位，因為要表達0~16需要5bits-> 改成reg [4:0] ct;  assign full = (ct == 5'd16); 
 - rtl ct增減邏輯錯誤導致合成錯誤 (原寫法為"只寫"、"只讀") -> 修正ct邏輯合併於寫三個條件("同時讀寫"、"只寫"、"只讀")
-
+- 修正"dout"輸出方式，使用"dout_r"搭配assign，避免latch，輸出更穩定(所有輸出應由暫存器控制而不應直接assign值給它作輸出)
 
 # 待處理
 - 增加 display 訊息顯示資料狀態
@@ -54,4 +61,9 @@ EPWave 波型圖可視化測試結果（見附圖）
 
 
 # 更版紀錄
-1. 初始版本 (Verilog同步FIFO + 基本TB)
+1.初始版本v1.0 
+- Verilog同步FIFO + 基本Testbench測試
+2.v1.1---加入顯示與驗證強化
+- 增加 $display 顯示
+- RTL 內部使用 dout_r + assign dout
+- RTL + TB 中新增 assert 驗證，檢查 FIFO 是否滿/空與 ct 合理性
