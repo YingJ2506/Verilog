@@ -61,9 +61,9 @@ EPWave 波型圖可視化測試結果（見附圖）
 
 
 # 更版紀錄
-1.初始版本v1.0 
+1. v1.0---初始版本 
 - Verilog同步FIFO + 基本Testbench測試
-2.v1.1---加入顯示與驗證強化
+2. v1.1---加入顯示與驗證強化
 - 增加 $display 顯示
 - RTL 內部使用 dout_r + assign dout
 - RTL + TB 中新增 assert 驗證，檢查 FIFO 是否滿/空與 ct 合理性
