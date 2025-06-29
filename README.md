@@ -33,14 +33,14 @@ Verilog project - FIFO
 # 模擬結果
 EPWave 波型圖可視化測試結果（見附圖）
 ![image](https://github.com/user-attachments/assets/ec74eb81-fcb1-403a-b54e-cacf4c5da32f)
-T=5~15，Reset Test ok
-T=20~40，Write Test ok
-T=45~65，Read Test ok
-T=70~130，Underflow Test ok
-T=135~215，Write & Read Test ok
-T=215~545，Overflow Test ok
-T=550~590，Reset During Active Test ok
-T=600~680，Idle test ok
+- T=5~15，Reset Test ok
+- T=20~40，Write Test ok
+- T=45~65，Read Test ok
+- T=70~130，Underflow Test ok
+- T=135~215，Write & Read Test ok
+- T=215~545，Overflow Test ok
+- T=550~590，Reset During Active Test ok
+- T=600~680，Idle test ok
 
 # 錯誤修正
 - rtl ct位寬錯誤導致reset後full一直處於1高電位，因為要表達0~16需要5bits-> 改成reg [4:0] ct;  assign full = (ct == 5'd16); 
