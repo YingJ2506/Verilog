@@ -71,16 +71,14 @@ EPWave 波型圖可視化測試結果（見附圖）
 - RTL 內部使用 dout_r + assign dout
 - RTL + TB 中新增 assert 驗證，檢查 FIFO 是否滿/空與 ct 合理性
 3. v1.2---修正 RTL 架構與豐富測試功能
-[RTL]
-- 修正將 dout 從 reg 改為 wire
-- 修正加入 else 區塊，避免未覆蓋造成 latch 推斷
-- 新增 overflow / underflow 訊號輸出
-- 增加 overflow / underflow assert 檢查報錯
-[Testbench]
-- 加入 overflow_count 與 underflow_count 累計次數
-- 增加隨機 wt_en / rd_en 控制，模擬真實應用行為
-- 整合「手動測試」與「隨機測試」，透過 parameter MODE = 0 控制執行模式：
-   -> MODE = 0：固定測資流程（手動 case）
-   -> MODE = 1：隨機 enable 測試（自動 case）
-   -> 更新原本 # 手動用時序測試改用 cycle 計數搭配 posedge clk 控制
+- RTL修正將 dout 從 reg 改為 wire
+- RTL修正加入 else 區塊，避免未覆蓋造成 latch 推斷
+- RTL新增 overflow / underflow 訊號輸出
+- RTL增加 overflow / underflow assert 檢查報錯
+- Testbench加入 overflow_count 與 underflow_count 累計次數
+- Testbench增加隨機 wt_en / rd_en 控制，模擬真實應用行為
+- Testbench整合「手動測試」與「隨機測試」，透過 parameter MODE = 0 控制執行模式：
+   - MODE = 0：固定測資流程（手動 case）
+   - MODE = 1：隨機 enable 測試（自動 case）
+   - 更新原本 # 手動用時序測試改用 cycle 計數搭配 posedge clk 控制
 
