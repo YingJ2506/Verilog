@@ -31,7 +31,7 @@ Verilog project - FIFO
 
 
 # 模擬結果
-EPWave 波型圖可視化測試結果（見附圖）
+## EPWave 波型圖可視化測試結果（見附圖）
 ![image](https://github.com/user-attachments/assets/ec74eb81-fcb1-403a-b54e-cacf4c5da32f)
 - T=5~15，Reset Test ok
 - T=20~40，Write Test ok
@@ -41,6 +41,11 @@ EPWave 波型圖可視化測試結果（見附圖）
 - T=215~545，Overflow Test ok
 - T=550~590，Reset During Active Test ok
 - T=600~680，Idle test ok
+
+## Python 分析 FIFO 行為
+- Verilog FIFO 模擬 → 產生 log.txt → Python 分析 → 印出overflow/underflow 錯誤
+- 透過Python檔案(fifo_py1.py) 分析log資料(fifo_log1.txt) 並印出錯誤。
+- Python 是根據 log 當下那一拍的狀態判定 overflow，不是模擬器內部的精確時序對齊。
 
 # 修正心得
 - RTL ct位寬錯誤修正: 起初發現reset後full會一直處於1高電位，詢問chatGPT後檢查code是否有寫錯或重複使用、波型有無被干擾或錯誤、陣列宣告條件與full判斷條件，最後透過$display知道設定是4'd16沒錯但顯示是0，而因為assign full = (ct==4'd16)等於ct==4'd0就會是高電位，要表達0~16需要5bits -> 因此改成reg [4:0] ct;  assign full = (ct == 5'd16);即可正常
