@@ -49,7 +49,7 @@ module fifo_rtl_1 #(
           dout_r <= mem[rd_p];
           rd_p <= (rd_p == DEPTH-1) ? 0 : (rd_p + 1);
         end
-        WRITE_ONLY: begin // {1,0} 2'b01 write only
+        WRITE_ONLY: begin // {1,0} 2'b10 write only
           ct <= ct + 1;
           mem[wt_p] <= din;
           wt_p <= (wt_p == DEPTH-1) ? 0 : (wt_p + 1);
