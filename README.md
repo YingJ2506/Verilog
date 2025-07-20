@@ -7,13 +7,13 @@ Verilog project - FIFO
 設計一同步FIFO(先進先出)緩衝器，包含寫入與讀取功能於同一時鐘下實現資料處理，先以資料寬度8bits、深度16筆作為設計需求，此 FIFO 為單時脈同步 FIFO，支援先進先出資料處理邏輯。
 
 # RTL模組設計邏輯
-- 資料輸入din
-- 寫入write & 讀取read
-- 同步更新(posedge clock) & 有重置功能(reset)
-- 處理全滿full & 全空empty狀態   //判斷用組合邏輯
-- 資料暫存(memory)               //write存入mem，read取出mem
-- 寫入&讀取指標(write_p、read_p)
-- 資料總數紀錄(count)
+- **記憶體陣列：** 內部採用 `reg` 型記憶體陣列 (`memory`) 用於儲存 8 位元資料，深度為 16 筆。
+- **寫入/讀取指標：** 實作 `write_pointer` 與 `read_pointer`，分別追蹤下一個寫入位置與下一個讀取位置。指標設計考慮最大值後歸零。
+- **計數器：** `count` 暫存器追蹤 FIFO 內當前儲存的資料數量，用於判斷 `full` 或 `empty` 狀態。
+- **全滿/全空判斷：** `full` 和 `empty` 狀態訊號透過組合邏輯即時判斷，基於寫入/讀取指標和資料計數。
+- **資料路徑控制：** 寫入操作 (`write_enable`) 將 `din` 寫入 `memory`；讀取操作 (`read_enable`) 從 `memory` 讀取資料至 `dout`。
+- **時序控制：** 所有內部狀態更新和暫存器操作均在時脈正緣 (`posedge clock`) 觸發。
+- **同步 Reset：** 導入同步 Reset 邏輯，將所有內部狀態復位至初始狀態。
 
 
 
@@ -49,7 +49,8 @@ Verilog project - FIFO
 ## Python 分析 FIFO 行為
 - Verilog FIFO 模擬 → 產生 log.txt → Python 分析 → 印出overflow/underflow 錯誤
 - 透過Python檔案(fifo_py1.py) 分析log資料(fifo_log1.txt) 並印出錯誤。
-- Python 是根據 log 當下那一拍的狀態判定 overflow，不是模擬器內部的精確時序對齊。
+- Python 分析是根據 log 各時脈週期的狀態判定 overflow/underflow，此為軟體層級的分析。
+
 
 # 修正心得
 - RTL ct位寬錯誤修正: 起初發現reset後full會一直處於1高電位，檢查code是否有寫錯或重複使用、波型有無錯誤、陣列宣告條件與full判斷條件，因為full從一開始就在高電位所以特別注意full的邏輯，也透過詢問chatgpt輔助建議可以透過$display確認正確數值，得知設定是4'd16相當於4'd0，原因來自ct實際最大需表示到16，而只用4bits只能表示到15，因此將 ct 位寬從 [3:0] 提升為 [4:0]，並將 full 條件調整為 5'd16 即可正常。
@@ -59,7 +60,7 @@ Verilog project - FIFO
 - 在RTL使用case語法來修改目前的if else時，回想起早期FSM使用typedef enum 去定義狀態，因此考慮到狀態會有四種(不讀寫、只讀、只寫、同時讀寫)，使用2bits去滿足需求，而在case的區域了解到可以使用兩個邏輯信號連接成一個2位元信號的方法去表示條件，作為判斷狀態的依據，且將IDLE狀態整合到default區域。
 - 在TB新增coverage時原本以為是有寫錯一直出現語法錯誤，重複的去查閱是否有地方寫錯，確認covergroup有做初始化設定與寫在always語法中去採點，而後才想到說EDA playgroung的icarus verilog 有可能不支援的問題，詢問chatgpt輔助確認icarus verilog在playground確實不支援covergroup語法，此待後續使用支援軟體驗證如 VCS 或 QuestaSim 等做完整驗證。
 
-# 待處理
+# 待優化功能
 - 增加 display 訊息顯示資料狀態 -> done
 - 增加簡單提示文字（例如 overflow/empty 警告） -> done
 - 程式碼轉成 SystemVerilog -> done
