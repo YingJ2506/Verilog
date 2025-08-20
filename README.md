@@ -97,4 +97,7 @@ Verilog project - FIFO
 - RTL：修正了 wt_p 和 rd_p 指標的更新邏輯，確保它們能在 FIFO 狀態機中正常運作。
 - TB：增加了覆蓋率（coverage）功能，透過 covergroup 來對 FIFO 關鍵狀態進行測試。
 - TB：增強了隨機化控制，進一步優化了 rst、wt_en 和 rd_en 的測試策略，使其更符合實際應用中的隨機行為。
+5. v1.4---修正coding style
+- RTL : 程式碼風格優化 case 敘述，並將 overflow/underflow 邏輯整合至主體，使其成為單一時鐘週期的脈衝。
+- RTL : 邏輯調整修正 LOG_WIDTH 參數計算，並將 FIFO 邏輯從「先動作後判斷」改為「先判斷狀態，再執行動作」。
 
